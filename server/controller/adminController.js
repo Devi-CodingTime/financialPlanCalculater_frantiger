@@ -1,5 +1,6 @@
 import FinancialData from "../model/financialDataModel.js";
 import userModel from "../model/userModel.js";
+import bcrypt from "bcrypt";
 export const getAllUsers= async (req, res) => {
   try {
     const users = await userModel.find({}, '-password').sort({ createdAt: -1 });
@@ -40,7 +41,7 @@ export const deleteUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash("123456", 10);
     
-    const admin = new User({
+    const admin = new userModel({
     firstName: 'Top Admin',
     lastName: '',
       email:"admin@gmail.com",
@@ -50,8 +51,12 @@ export const deleteUser = async (req, res) => {
     });
 
     await admin.save();
-     res.status(200).json({ message: 'Admin created successfully' });
+    console.log("Admin created successfully");
+    // return res.send({ message: 'Admin created successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error("Error creating admin:", error);
+    // If you want to return an error response, uncomment the line below
+    // res.status(500).json({ message: 'Server error', error: error.message });
+  //  return res.send({ message: 'Server error', error: error.message });
   }
 }
