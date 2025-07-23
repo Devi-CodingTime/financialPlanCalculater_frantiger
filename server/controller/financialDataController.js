@@ -30,10 +30,13 @@ export const getFinancialData = async (req, res) => {
 
 export const updateFinancialData = async (req, res) => {
   try {
-    const existingData = await FinancialData.findOne({ userId: req.user.userId });
+    console.log(req.user.id, "req.body");
+    const existingData = await FinancialData.findOne({ userId: req.user.id });
     console.log(existingData, "existingData");
     
     if (existingData) {
+      console.log("Updating existing financial data");
+      
       // Update existing data
       Object.assign(existingData, req.body);
       existingData.lastUpdated = new Date();
@@ -41,8 +44,9 @@ export const updateFinancialData = async (req, res) => {
       res.json(existingData);
     } else {
       // Create new data
+      console.log( "req.body");
       const financialData = new FinancialData({
-        userId: req.user.userId,
+        userId: req.user.id,
         ...req.body
       });
       await financialData.save();
